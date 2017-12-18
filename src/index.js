@@ -598,7 +598,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     onExpandedChange &&
                       onExpandedChange(newExpanded, cellInfo.nestingPath, e)
                   }
-                )
+                )  
               }
 
               // Default to a standard cell
@@ -698,6 +698,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
               // If there are multiple onClick events, make sure they don't override eachother. This should maybe be expanded to handle all function attributes
               const interactionProps = {
                 onClick: resolvedOnExpanderClick,
+
+                //for the enter key event
+                onKeyPress: resolvedOnExpanderClick,
               }
 
               if (tdProps.rest.onClick) {
@@ -722,6 +725,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                     cellInfo.expandable && 'rt-expandable',
                     (isBranch || isPreview) && 'rt-pivot'
                   )}
+
+                  //if cell is expandable, you can tab into them
+                  tabIndex = {cellInfo.expandable && !skipTable ? '0' : '-1'}
+
                   style={{
                     ...styles,
                     flex: `${width} 0 auto`,
@@ -944,6 +951,15 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
     const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
+    //tabbing over the whole table 
+    let skipTable = true;
+    const onSkipTable = (e) => {
+      console.log(e.charCode);
+      if(e.keyCode === 13) {
+        skipTable = false;
+      }
+    }
+
     const makeTable = () => {
       const pagination = makePagination()
       return (
@@ -973,6 +989,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {hasFilters ? makeFilters() : null}
             <TbodyComponent
               className={classnames(tBodyProps.className)}
+
+              //skippingTable
+              tabIndex='0'
+              onKeyPress={onSkipTable}
+              //-------------
+
               style={{
                 ...tBodyProps.style,
                 minWidth: `${rowMinWidth}px`,
