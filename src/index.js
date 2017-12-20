@@ -16,7 +16,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
   constructor (props) {
     super()
 
-    console.log('testing');
+    console.log('more testing');
     this.getResolvedState = this.getResolvedState.bind(this)
     this.getDataModel = this.getDataModel.bind(this)
     this.getSortedData = this.getSortedData.bind(this)
