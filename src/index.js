@@ -16,7 +16,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
   constructor (props) {
     super()
 
-    console.log('more, more testing');
+    console.log('Hello, World - from index.js');
+
     this.getResolvedState = this.getResolvedState.bind(this)
     this.getDataModel = this.getDataModel.bind(this)
     this.getSortedData = this.getSortedData.bind(this)
@@ -33,6 +34,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     this.resizeColumnStart = this.resizeColumnStart.bind(this)
     this.resizeColumnEnd = this.resizeColumnEnd.bind(this)
     this.resizeColumnMoving = this.resizeColumnMoving.bind(this)
+    this.onSkipTable = this.onSkipTable.bind(this)
 
     this.state = {
       page: 0,
@@ -43,6 +45,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       resized: props.defaultResized,
       currentlyResizing: false,
       skipNextSort: false,
+
+      skipTable: true,
     }
   }
 
@@ -102,6 +106,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       expanded,
       pages,
       onExpandedChange,
+      skipTable,
       // Components
       TableComponent,
       TheadComponent,
@@ -952,15 +957,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     const noDataProps = getNoDataProps(finalState, undefined, undefined, this)
     const resizerProps = getResizerProps(finalState, undefined, undefined, this)
 
-    //tabbing over the whole table 
-    let skipTable = true;
-    const onSkipTable = (e) => {
-      console.log(e.charCode);
-      if(e.keyCode === 13) {
-        skipTable = false;
-      }
-    }
-
     const makeTable = () => {
       const pagination = makePagination()
       return (
@@ -993,7 +989,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
 
               //skippingTable
               tabIndex='0'
-              onKeyPress={onSkipTable}
+              onKeyPress={this.onSkipTable}
               //-------------
 
               style={{
