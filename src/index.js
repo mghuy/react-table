@@ -607,6 +607,29 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 )  
               }
 
+              const onExpanderKey = e => {
+                if(e.charCode === 13 || e.charCode === 32) {
+                  e.preventDefault();
+
+                  let newExpanded = _.clone(expanded)
+                  if(isExpanded) {
+                    newExpanded = _.set(newExpanded, cellInfo.nestingPath, false)
+                  } else {
+                    newExpanded = _.set(newExpanded, cellInfo.nestingPath, {})
+                  }
+
+                  return this.setStateWithData(
+                    {
+                      expanded: newExpanded,
+                    },
+                    () => {
+                      onExpandedChange &&
+                        onExpandedChange(newExpanded, cellInfo.nestingPath, e)
+                    }
+                  )  
+                }
+              }
+
               // Default to a standard cell
               let resolvedCell = _.normalizeComponent(
                 column.Cell,
@@ -701,12 +724,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                 ? onExpanderClick
                 : () => {}
 
+              const resolvedOnExpanderKey = useOnExpanderClick
+                ? onExpanderKey 
+                : () => {}
+
               // If there are multiple onClick events, make sure they don't override eachother. This should maybe be expanded to handle all function attributes
               const interactionProps = {
                 onClick: resolvedOnExpanderClick,
 
                 //for the enter key event
-                onKeyPress: resolvedOnExpanderClick,
+                onKeyPress: resolvedOnExpanderKey,
               }
 
               if (tdProps.rest.onClick) {
@@ -986,17 +1013,16 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {hasFilters ? makeFilters() : null}
             <TbodyComponent
               className={classnames(tBodyProps.className)}
-
-              //skippingTable
-              tabIndex='0'
-              onKeyPress={this.onSkipTable}
-              //-------------
-
               style={{
                 ...tBodyProps.style,
                 minWidth: `${rowMinWidth}px`,
               }}
               {...tBodyProps.rest}
+
+              //skippingTable
+              tabIndex='0'
+              onKeyPress={this.onSkipTable}
+              //-------------
             >
               {pageRows.map((d, i) => makePageRow(d, i))}
               {padRows.map(makePadRow)}

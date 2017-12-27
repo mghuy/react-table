@@ -5,13 +5,12 @@ export default Base =>
   class extends Base {
 
     onSkipTable (event) {
-      //console.log(this.skipNextSort);
       if(event.charCode === 13) {
         this.setState(
           {skipTable: false}
         )
-        //console.log(this.rows);
-        //this.row[this.indexKey].focus();
+        //console.log(event.rows);
+        //this.rows[indexKey].focus();
       }
     }
 
