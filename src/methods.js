@@ -4,16 +4,6 @@ import _ from './utils'
 export default Base =>
   class extends Base {
 
-    onSkipTable (event) {
-      if(event.charCode === 13) {
-        this.setState(
-          {skipTable: false}
-        )
-        //console.log(event.rows);
-        //this.rows[indexKey].focus();
-      }
-    }
-
     getResolvedState (props, state) {
       const resolvedState = {
         ..._.compactObject(this.state),
@@ -22,6 +12,16 @@ export default Base =>
         ..._.compactObject(props),
       }
       return resolvedState
+    }
+
+    onSkipTable (event) {
+      if(event.charCode === 13) {
+        this.setState(
+          {skipTable: false}
+        )
+        //console.log(row);
+        //this.rows[indexKey].focus();
+      }
     }
 
     getDataModel (newState) {
